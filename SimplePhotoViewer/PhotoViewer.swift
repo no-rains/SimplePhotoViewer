@@ -36,13 +36,13 @@ fileprivate struct ImageWrapper: View {
     var minImgDisplayPoint: CGPoint
     var minScale: CGFloat
     var maxScale: CGFloat
-    @State var scaleRatio: CGFloat = 1 //Base on the minScale
+    @State var scaleRatio: CGFloat = 1 // Base on the minScale
 
     init(image: UIImage, frame: CGRect) {
         self.image = image
         self.frame = frame
 
-        var fitRatio: CGFloat = min(UIScreen.main.bounds.width / CGFloat(image.cgImage!.width), UIScreen.main.bounds.height / CGFloat(image.cgImage!.height))
+        var fitRatio: CGFloat = min(frame.width / CGFloat(image.cgImage!.width), frame.height / CGFloat(image.cgImage!.height))
         if fitRatio > 1 {
             fitRatio = 1
         }
@@ -53,14 +53,14 @@ fileprivate struct ImageWrapper: View {
         minImgSize = CGSize(width: maxImgSize.width * fitRatio,
                             height: maxImgSize.height * fitRatio)
 
-        minImgDisplayPoint = CGPoint(x: (UIScreen.main.bounds.width - minImgSize.width) / 2,
-                                     y: (UIScreen.main.bounds.height - minImgSize.height) / 2)
+        minImgDisplayPoint = CGPoint(x: (frame.width - minImgSize.width) / 2,
+                                     y: (frame.height - minImgSize.height) / 2)
 
         minScale = fitRatio
         maxScale = min(maxImgSize.width / minImgSize.width, maxImgSize.height / minImgSize.height) * minScale
 
         print("image size:\(image.cgImage!.width),\(image.cgImage!.height)")
-        print("screen:\(UIScreen.main.bounds)")
+        print("screen:\(frame)")
         print("minImgPoint:\(minImgDisplayPoint)")
         // print("actualSize:\(actualSize.width)")
     }
@@ -102,10 +102,10 @@ fileprivate struct ImageWrapper: View {
                 if let lastScale = self.lastScale {
                     let ratio = 1.0 + (scale - lastScale)
                     self.scaleRatio *= ratio
-                    
+
                     if self.scaleRatio < 1 {
                         self.scaleRatio = 1
-                    }else if self.scaleRatio * self.minScale > self.maxScale{
+                    } else if self.scaleRatio * self.minScale > self.maxScale {
                         self.scaleRatio = self.maxScale / self.minScale
                     }
                 }
@@ -157,14 +157,10 @@ fileprivate struct ImageWrapper: View {
 
         let fitToFill = TapGesture(count: 2)
             .onEnded {
-                self.isScaled.toggle()
-                if !self.isScaled {
-                    self.magScale = 1
-
-                    // Reset the value
-                    self.dragOffset = .zero
-                    self.actualSize.width = self.frame.width
-                    self.actualSize.height = self.frame.height
+                if self.scaleRatio > 1 {
+                    self.scaleRatio = 1
+                } else {
+                    self.scaleRatio = self.maxScale / self.minScale
                 }
             }
             .exclusively(before: dragOrDismiss)
