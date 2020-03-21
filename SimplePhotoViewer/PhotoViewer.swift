@@ -9,35 +9,63 @@
 import SwiftUI
 
 struct PhotoViewer: View {
-    var imageName: String
+    var image: UIImage
     var body: some View {
         return GeometryReader { geometryProxy in
-            ImageWrapper(imageName: self.imageName,
-                         frame: CGRect(x: geometryProxy.safeAreaInsets.leading, y: geometryProxy.safeAreaInsets.trailing, width: geometryProxy.size.width, height: geometryProxy.size.height),
-                         actualSize: CGSize(width: geometryProxy.size.width, height: geometryProxy.size.height))
+            ImageWrapper(image: self.image,
+                         frame: CGRect(x: geometryProxy.safeAreaInsets.leading, y: geometryProxy.safeAreaInsets.trailing, width: geometryProxy.size.width, height: geometryProxy.size.height))
         }
     }
 }
 
 fileprivate struct ImageWrapper: View {
     // The image name
-    let imageName: String
+    let image: UIImage
 
     // The frame for the image view
     let frame: CGRect
 
-    @State var actualSize: CGSize
+    // The actual scale base on the minSize
+    @State var actualScale: CGFloat = 1.0
 
-    /*
-     init(imageName: String, frame: CGRect, size: CGSize) {
-         self.imageName = imageName
-         self.frame = frame
-         self.actualSize = size
+    // The actual offset base on the minPosition
+    @State var actualOffset: CGPoint = .zero
 
-         print("frame.width:\(frame.width)")
-         print("actualSize:\(self.actualSize.width)")
-     }
-     */
+    var minImgSize: CGSize
+    var maxImgSize: CGSize
+    var minImgDisplayPoint: CGPoint
+    var minScale: CGFloat
+    var maxScale: CGFloat
+    @State var scaleRatio: CGFloat = 1 //Base on the minScale
+
+    init(image: UIImage, frame: CGRect) {
+        self.image = image
+        self.frame = frame
+
+        var fitRatio: CGFloat = min(UIScreen.main.bounds.width / CGFloat(image.cgImage!.width), UIScreen.main.bounds.height / CGFloat(image.cgImage!.height))
+        if fitRatio > 1 {
+            fitRatio = 1
+        }
+
+        maxImgSize = CGSize(width: CGFloat(image.cgImage!.width),
+                            height: CGFloat(image.cgImage!.height))
+
+        minImgSize = CGSize(width: maxImgSize.width * fitRatio,
+                            height: maxImgSize.height * fitRatio)
+
+        minImgDisplayPoint = CGPoint(x: (UIScreen.main.bounds.width - minImgSize.width) / 2,
+                                     y: (UIScreen.main.bounds.height - minImgSize.height) / 2)
+
+        minScale = fitRatio
+        maxScale = min(maxImgSize.width / minImgSize.width, maxImgSize.height / minImgSize.height) * minScale
+
+        print("image size:\(image.cgImage!.width),\(image.cgImage!.height)")
+        print("screen:\(UIScreen.main.bounds)")
+        print("minImgPoint:\(minImgDisplayPoint)")
+        // print("actualSize:\(actualSize.width)")
+    }
+
+    @State var actualSize: CGSize = .zero
 
     // Magnify and Rotate States
     @State private var magScale: CGFloat = 1
@@ -61,11 +89,8 @@ fileprivate struct ImageWrapper: View {
 
                 if let lastScale = self.lastScale {
                     // The zoom gesture is base on the center, so is a half
-                    let curScale = 1.0 + (scale - lastScale)
-                    self.actualPosition.x *= curScale / 2.0
-                    self.actualPosition.y *= curScale / 2.0
-                    self.actualSize.width *= curScale
-                    self.actualSize.height *= curScale
+                    let ratio = 1.0 + (scale - lastScale)
+                    self.scaleRatio *= ratio
                 }
 
                 self.lastScale = scale
@@ -75,12 +100,14 @@ fileprivate struct ImageWrapper: View {
                 self.isScaled = scale > 1
 
                 if let lastScale = self.lastScale {
-                    // The zoom gesture is base on the center, so is a half
-                    let curScale = 1.0 + (scale - lastScale)
-                    self.actualPosition.x *= curScale / 2.0
-                    self.actualPosition.y *= curScale / 2.0
-                    self.actualSize.width *= curScale
-                    self.actualSize.height *= curScale
+                    let ratio = 1.0 + (scale - lastScale)
+                    self.scaleRatio *= ratio
+                    
+                    if self.scaleRatio < 1 {
+                        self.scaleRatio = 1
+                    }else if self.scaleRatio * self.minScale > self.maxScale{
+                        self.scaleRatio = self.maxScale / self.minScale
+                    }
                 }
 
                 self.lastScale = nil
@@ -143,14 +170,16 @@ fileprivate struct ImageWrapper: View {
             .exclusively(before: dragOrDismiss)
             .exclusively(before: rotateAndZoom)
 
-        return Image(imageName)
-            .resizable()
+        return Image(uiImage: image)
+            // .resizable()
             .renderingMode(.original)
-            .aspectRatio(contentMode: .fit)
+            // .aspectRatio(contentMode: .fit)
             .gesture(fitToFill)
-            .scaleEffect(isScaled ? magScale : max(1 - abs(self.dragOffset.height) * 0.004, 0.6), anchor: .center)
+            // .scaleEffect(isScaled ? magScale : max(1 - abs(self.dragOffset.height) * 0.004, 0.6), anchor: .center)
             // .offset(x: dragOffset.width * magScale, y: dragOffset.height * magScale)
-            .offset(x: actualPosition.x, y: actualPosition.y)
+            // .offset(x: actualPosition.x, y: actualPosition.y)
+            .scaleEffect(minScale * scaleRatio, anchor: .center)
+            // .offset(x: minImgPoint.x, y:minImgPoint.y)
             .animation(.spring(response: 0.4, dampingFraction: 0.9))
     }
 }
