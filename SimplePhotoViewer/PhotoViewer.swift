@@ -13,17 +13,31 @@ struct PhotoViewer: View {
     var body: some View {
         return GeometryReader { geometryProxy in
             ImageWrapper(imageName: self.imageName,
-                         frame: CGRect(x: geometryProxy.safeAreaInsets.leading, y: geometryProxy.safeAreaInsets.trailing, width: geometryProxy.size.width, height: geometryProxy.size.height))
+                         frame: CGRect(x: geometryProxy.safeAreaInsets.leading, y: geometryProxy.safeAreaInsets.trailing, width: geometryProxy.size.width, height: geometryProxy.size.height),
+                         actualSize: CGSize(width: geometryProxy.size.width, height: geometryProxy.size.height))
         }
     }
 }
 
 fileprivate struct ImageWrapper: View {
     // The image name
-    var imageName: String
+    let imageName: String
 
     // The frame for the image view
-    var frame: CGRect
+    let frame: CGRect
+
+    @State var actualSize: CGSize
+
+    /*
+     init(imageName: String, frame: CGRect, size: CGSize) {
+         self.imageName = imageName
+         self.frame = frame
+         self.actualSize = size
+
+         print("frame.width:\(frame.width)")
+         print("actualSize:\(self.actualSize.width)")
+     }
+     */
 
     // Magnify and Rotate States
     @State private var magScale: CGFloat = 1
@@ -35,47 +49,82 @@ fileprivate struct ImageWrapper: View {
 
     // The actual position and size after scaling and being offset
     @State private var actualPosition: CGPoint = .zero
-    @State private var actualSize: CGSize = .zero
+
+    @State private var lastTranslation: CGSize?
+    @State private var lastScale: CGFloat?
 
     var body: some View {
         let rotateAndZoom = MagnificationGesture()
-            .onChanged {
-                self.magScale = $0
+            .onChanged { scale in
+                self.magScale = scale
                 self.isScaled = true
+
+                if let lastScale = self.lastScale {
+                    // The zoom gesture is base on the center, so is a half
+                    let curScale = 1.0 + (scale - lastScale)
+                    self.actualPosition.x *= curScale / 2.0
+                    self.actualPosition.y *= curScale / 2.0
+                    self.actualSize.width *= curScale
+                    self.actualSize.height *= curScale
+                }
+
+                self.lastScale = scale
             }
-            .onEnded {
-                $0 > 1 ? (self.magScale = $0) : (self.magScale = 1)
-                self.isScaled = $0 > 1
+            .onEnded { scale in
+                scale > 1 ? (self.magScale = scale) : (self.magScale = 1)
+                self.isScaled = scale > 1
+
+                if let lastScale = self.lastScale {
+                    // The zoom gesture is base on the center, so is a half
+                    let curScale = 1.0 + (scale - lastScale)
+                    self.actualPosition.x *= curScale / 2.0
+                    self.actualPosition.y *= curScale / 2.0
+                    self.actualSize.width *= curScale
+                    self.actualSize.height *= curScale
+                }
+
+                self.lastScale = nil
             }
 
         let dragOrDismiss = DragGesture()
-            .onChanged { self.dragOffset = $0.translation
-                print("location:\($0.location)")
-                print("startlocation:\($0.startLocation)")
+            .onChanged { value in
+                self.dragOffset = value.translation
+
+                if let lastTranslation = self.lastTranslation {
+                    self.actualPosition.x += value.translation.width - lastTranslation.width
+                    self.actualPosition.y += value.translation.height - lastTranslation.height
+                }
+
+                self.lastTranslation = value.translation
+
+                // self.actualPosition.x += value.translation.width
+                // self.actualPosition.y += value.translation.height
             }
             .onEnded { value in
                 if self.isScaled {
                     self.dragOffset = value.translation
-                    
-                    self.actualSize.width += value.translation.width
-                    self.actualSize.height += value.translation.height
 
-                    // print(self.dragOffset)
+                    if let lastTranslation = self.lastTranslation {
+                        self.actualPosition.x += value.translation.width - lastTranslation.width
+                        self.actualPosition.y += value.translation.height - lastTranslation.height
+                    }
 
-                    /*
-                     if self.dragOffset.height <= UIScreen.main.bounds.height{
-                         self.dragOffset.height = 0
-                     }
+                    self.lastTranslation = nil
 
-                     if self.dragOffset.width <= UIScreen.main.bounds.width{
-                         self.dragOffset.width = 0
-                     }
-                     */
+                    if self.actualSize.width <= self.frame.width {
+                        self.actualPosition.x = 0
+                    }
+
+                    if self.actualSize.height <= self.frame.height {
+                        self.actualPosition.y = 0
+                    }
 
                 } else {
                     self.dragOffset = CGSize.zero
-                    
-                    self.actualSize = CGSize.zero
+
+                    self.actualPosition = .zero
+                    self.actualSize.width = self.frame.width
+                    self.actualSize.height = self.frame.height
                 }
             }
 
@@ -84,7 +133,11 @@ fileprivate struct ImageWrapper: View {
                 self.isScaled.toggle()
                 if !self.isScaled {
                     self.magScale = 1
+
+                    // Reset the value
                     self.dragOffset = .zero
+                    self.actualSize.width = self.frame.width
+                    self.actualSize.height = self.frame.height
                 }
             }
             .exclusively(before: dragOrDismiss)
@@ -96,7 +149,8 @@ fileprivate struct ImageWrapper: View {
             .aspectRatio(contentMode: .fit)
             .gesture(fitToFill)
             .scaleEffect(isScaled ? magScale : max(1 - abs(self.dragOffset.height) * 0.004, 0.6), anchor: .center)
-            .offset(x: dragOffset.width * magScale, y: dragOffset.height * magScale)
+            // .offset(x: dragOffset.width * magScale, y: dragOffset.height * magScale)
+            .offset(x: actualPosition.x, y: actualPosition.y)
             .animation(.spring(response: 0.4, dampingFraction: 0.9))
     }
 }
