@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "63527B97-6873-469A-BF13-188360536AA4"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6AF62077-AA1C-4D42-8867-92A6C9C116EE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SimplePhotoViewer/ImageView/ImageView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "ImageView"
+            landmarkType = "14">
+            <Locations>
+               <Location
+                  uuid = "6AF62077-AA1C-4D42-8867-92A6C9C116EE - 75fb5cb8097e228"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SimplePhotoViewer.ImageView.body.getter : some"
+                  moduleName = "SimplePhotoViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norains/Documents/Workplace/iOS/SimplePhotoViewer/SimplePhotoViewer/ImageView/ImageView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68"
+                  offsetFromSymbolStart = "3044">
+               </Location>
+               <Location
+                  uuid = "6AF62077-AA1C-4D42-8867-92A6C9C116EE - 8bb8f0a047c344a"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (__C.CGRect) -&gt; () in SimplePhotoViewer.ImageView.body.getter : some"
+                  moduleName = "SimplePhotoViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norains/Documents/Workplace/iOS/SimplePhotoViewer/SimplePhotoViewer/ImageView/ImageView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "56"
+                  endingLineNumber = "56"
+                  offsetFromSymbolStart = "142">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AB1BD133-87E4-4940-957A-B9EA5263B1BC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SimplePhotoViewer/ImageView/InteractiveImageView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "126"
+            endingLineNumber = "126">
+            <Locations>
+               <Location
+                  uuid = "AB1BD133-87E4-4940-957A-B9EA5263B1BC - c34546e09a083aeb"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #9 () -&gt; &lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.animation(Swift.Optional&lt;SwiftUI.Animation&gt;) -&gt; some&gt;&gt;.0 in SimplePhotoViewer.InteractiveImageView.body.getter : some"
+                  moduleName = "SimplePhotoViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norains/Documents/Workplace/iOS/SimplePhotoViewer/SimplePhotoViewer/ImageView/InteractiveImageView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "105"
+                  endingLineNumber = "105"
+                  offsetFromSymbolStart = "4930">
+               </Location>
+               <Location
+                  uuid = "AB1BD133-87E4-4940-957A-B9EA5263B1BC - 310797c7b7f5808f"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.CGRect) -&gt; () in closure #9 () -&gt; &lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.animation(Swift.Optional&lt;SwiftUI.Animation&gt;) -&gt; some&gt;&gt;.0 in SimplePhotoViewer.InteractiveImageView.body.getter : some"
+                  moduleName = "SimplePhotoViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/norains/Documents/Workplace/iOS/SimplePhotoViewer/SimplePhotoViewer/ImageView/InteractiveImageView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "43"
+                  endingLineNumber = "43"
+                  offsetFromSymbolStart = "142">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "57664068-9746-4487-81E5-B4C3E31523E0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SimplePhotoViewer/ImageView/ImageView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

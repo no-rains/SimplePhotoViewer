@@ -31,17 +31,11 @@ fileprivate struct ImageWrapper: View {
     @State private var isScaled: Bool = false
 
     // Drag Gesture Binding
-    @State var dragOffset: CGSize = .zero
+    @State private var dragOffset: CGSize = .zero
 
-    // Double Tap Gesture State
-    @State private var shouldFit: Bool = true
-
-    // Action Sheet State
-    @State var shouldShowActionSheet = false
-
-    // Image CGSize State
-    @State var imageSize: CGSize = .zero
-
+    // The actual position and size after scaling and being offset
+    @State private var actualPosition: CGPoint = .zero
+    @State private var actualSize: CGSize = .zero
 
     var body: some View {
         let rotateAndZoom = MagnificationGesture()
@@ -55,18 +49,38 @@ fileprivate struct ImageWrapper: View {
             }
 
         let dragOrDismiss = DragGesture()
-            .onChanged { self.dragOffset = $0.translation }
+            .onChanged { self.dragOffset = $0.translation
+                print("location:\($0.location)")
+                print("startlocation:\($0.startLocation)")
+            }
             .onEnded { value in
                 if self.isScaled {
                     self.dragOffset = value.translation
+                    
+                    self.actualSize.width += value.translation.width
+                    self.actualSize.height += value.translation.height
+
+                    // print(self.dragOffset)
+
+                    /*
+                     if self.dragOffset.height <= UIScreen.main.bounds.height{
+                         self.dragOffset.height = 0
+                     }
+
+                     if self.dragOffset.width <= UIScreen.main.bounds.width{
+                         self.dragOffset.width = 0
+                     }
+                     */
+
                 } else {
                     self.dragOffset = CGSize.zero
+                    
+                    self.actualSize = CGSize.zero
                 }
             }
 
         let fitToFill = TapGesture(count: 2)
             .onEnded {
-                self.isScaled ? (self.shouldFit = true) : (self.shouldFit = false)
                 self.isScaled.toggle()
                 if !self.isScaled {
                     self.magScale = 1

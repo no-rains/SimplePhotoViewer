@@ -16,12 +16,16 @@ struct ContentView: View {
 
     var body: some View {
         return ZStack(alignment: .topLeading) {
+            /*
             ImageView(sourceRect: $sourceRect, selectedImage: $selectedImage, imageName: "photo", height: 200, cornerRadius: 20)
                 .padding()
                 .environmentObject(imageViewerAnimatorBindings)
 
             ImageViewAnimator(sourceRect: sourceRect, selectedImage: selectedImage)
                 .environmentObject(imageViewerAnimatorBindings)
+             */
+            
+            PhotoViewer(imageName: "photo")
         }
         .environmentObject(imageViewerAnimatorBindings)
         .coordinateSpace(name: "globalCooardinate")
