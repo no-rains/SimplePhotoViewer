@@ -118,13 +118,11 @@ fileprivate struct ImageWrapper: View {
                     self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio
                     self.actualOffset.y += (value.translation.height - lastTranslation.height) * self.scaleRatio
                 }
-                
+
                 self.lastTranslation = value.translation
 
-                //print("translation:\(value.translation)")
-                //print("actualOffset:\(self.actualOffset)")
-
-                
+                // print("translation:\(value.translation)")
+                // print("actualOffset:\(self.actualOffset)")
             }
             .onEnded { value in
                 self.dragOffset = value.translation
@@ -132,6 +130,35 @@ fileprivate struct ImageWrapper: View {
                 if let lastTranslation = self.lastTranslation {
                     self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio
                     self.actualOffset.y += (value.translation.height - lastTranslation.height) * self.scaleRatio
+                }
+
+                //Fix the display area
+                if self.frame.width > self.minImgSize.width * self.scaleRatio {
+                    self.actualOffset.x = 0
+                } else {
+                    let trailingBaseLine = (self.frame.width - self.minImgSize.width * self.scaleRatio) / 2
+                    if self.actualOffset.x < trailingBaseLine {
+                        self.actualOffset.x = trailingBaseLine
+                    }
+
+                    let leadingBaseLine = (self.minImgSize.width * self.scaleRatio - self.frame.width) / 2
+                    if self.actualOffset.x > leadingBaseLine {
+                        self.actualOffset.x = leadingBaseLine
+                    }
+                }
+                
+                if self.frame.height > self.minImgSize.height * self.scaleRatio {
+                    self.actualOffset.y = 0
+                } else {
+                    let trailingBaseLine = (self.frame.height - self.minImgSize.height * self.scaleRatio) / 2
+                    if self.actualOffset.y < trailingBaseLine {
+                        self.actualOffset.y = trailingBaseLine
+                    }
+
+                    let leadingBaseLine = (self.minImgSize.height * self.scaleRatio - self.frame.height) / 2
+                    if self.actualOffset.y > leadingBaseLine {
+                        self.actualOffset.y = leadingBaseLine
+                    }
                 }
 
                 self.lastTranslation = nil
