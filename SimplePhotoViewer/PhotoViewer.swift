@@ -78,6 +78,36 @@ fileprivate struct ImageWrapper: View {
     // Drag Gesture Binding
     @State private var dragOffset: CGSize = .zero
 
+    private func fixOffset() {
+        if frame.width > minImgSize.width * scaleRatio {
+            actualOffset.x = 0
+        } else {
+            let trailingBaseLine = (frame.width - minImgSize.width * scaleRatio) / 2
+            if actualOffset.x < trailingBaseLine {
+                actualOffset.x = trailingBaseLine
+            }
+
+            let leadingBaseLine = (minImgSize.width * scaleRatio - frame.width) / 2
+            if actualOffset.x > leadingBaseLine {
+                actualOffset.x = leadingBaseLine
+            }
+        }
+
+        if frame.height > minImgSize.height * scaleRatio {
+            actualOffset.y = 0
+        } else {
+            let trailingBaseLine = (frame.height - minImgSize.height * scaleRatio) / 2
+            if actualOffset.y < trailingBaseLine {
+                actualOffset.y = trailingBaseLine
+            }
+
+            let leadingBaseLine = (minImgSize.height * scaleRatio - frame.height) / 2
+            if actualOffset.y > leadingBaseLine {
+                actualOffset.y = leadingBaseLine
+            }
+        }
+    }
+
     var body: some View {
         let rotateAndZoom = MagnificationGesture()
             .onChanged { scale in
@@ -106,6 +136,8 @@ fileprivate struct ImageWrapper: View {
                         self.scaleRatio = self.maxScale / self.minScale
                     }
                 }
+                
+                self.fixOffset()
 
                 self.lastScale = nil
             }
@@ -132,34 +164,7 @@ fileprivate struct ImageWrapper: View {
                     self.actualOffset.y += (value.translation.height - lastTranslation.height) * self.scaleRatio
                 }
 
-                //Fix the display area
-                if self.frame.width > self.minImgSize.width * self.scaleRatio {
-                    self.actualOffset.x = 0
-                } else {
-                    let trailingBaseLine = (self.frame.width - self.minImgSize.width * self.scaleRatio) / 2
-                    if self.actualOffset.x < trailingBaseLine {
-                        self.actualOffset.x = trailingBaseLine
-                    }
-
-                    let leadingBaseLine = (self.minImgSize.width * self.scaleRatio - self.frame.width) / 2
-                    if self.actualOffset.x > leadingBaseLine {
-                        self.actualOffset.x = leadingBaseLine
-                    }
-                }
-                
-                if self.frame.height > self.minImgSize.height * self.scaleRatio {
-                    self.actualOffset.y = 0
-                } else {
-                    let trailingBaseLine = (self.frame.height - self.minImgSize.height * self.scaleRatio) / 2
-                    if self.actualOffset.y < trailingBaseLine {
-                        self.actualOffset.y = trailingBaseLine
-                    }
-
-                    let leadingBaseLine = (self.minImgSize.height * self.scaleRatio - self.frame.height) / 2
-                    if self.actualOffset.y > leadingBaseLine {
-                        self.actualOffset.y = leadingBaseLine
-                    }
-                }
+                self.fixOffset()
 
                 self.lastTranslation = nil
             }

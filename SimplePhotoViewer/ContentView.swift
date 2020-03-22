@@ -25,7 +25,7 @@ struct ContentView: View {
                 .environmentObject(imageViewerAnimatorBindings)
              */
             
-            PhotoViewer(imageName: "photo")
+            PhotoViewer(image: UIImage(named: "photo")!)
         }
         .environmentObject(imageViewerAnimatorBindings)
         .coordinateSpace(name: "globalCooardinate")
