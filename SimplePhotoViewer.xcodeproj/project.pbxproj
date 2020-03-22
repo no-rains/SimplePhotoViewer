@@ -12,10 +12,7 @@
 		96E6D5E22421148C00BB07C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96E6D5E12421148C00BB07C9 /* Assets.xcassets */; };
 		96E6D5E52421148C00BB07C9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96E6D5E42421148C00BB07C9 /* Preview Assets.xcassets */; };
 		96E6D5E82421148C00BB07C9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96E6D5E62421148C00BB07C9 /* LaunchScreen.storyboard */; };
-		96E6D5F32421150300BB07C9 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E6D5EF2421150300BB07C9 /* ImageView.swift */; };
-		96E6D5F42421150300BB07C9 /* InteractiveImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E6D5F02421150300BB07C9 /* InteractiveImageView.swift */; };
 		96E6D5F52421150300BB07C9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E6D5F12421150300BB07C9 /* ContentView.swift */; };
-		96E6D5F62421150300BB07C9 /* ImageViewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E6D5F22421150300BB07C9 /* ImageViewAnimator.swift */; };
 		96E6D5F92422F25E00BB07C9 /* PhotoViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E6D5F82422F25E00BB07C9 /* PhotoViewer.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,10 +24,7 @@
 		96E6D5E42421148C00BB07C9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		96E6D5E72421148C00BB07C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		96E6D5E92421148C00BB07C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		96E6D5EF2421150300BB07C9 /* ImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
-		96E6D5F02421150300BB07C9 /* InteractiveImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveImageView.swift; sourceTree = "<group>"; };
 		96E6D5F12421150300BB07C9 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		96E6D5F22421150300BB07C9 /* ImageViewAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewAnimator.swift; sourceTree = "<group>"; };
 		96E6D5F82422F25E00BB07C9 /* PhotoViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -64,15 +58,14 @@
 		96E6D5DA2421148A00BB07C9 /* SimplePhotoViewer */ = {
 			isa = PBXGroup;
 			children = (
-				96E6D5F72421151200BB07C9 /* ImageView */,
 				96E6D5F12421150300BB07C9 /* ContentView.swift */,
 				96E6D5DB2421148A00BB07C9 /* AppDelegate.swift */,
+				96E6D5F82422F25E00BB07C9 /* PhotoViewer.swift */,
 				96E6D5DD2421148A00BB07C9 /* SceneDelegate.swift */,
 				96E6D5E12421148C00BB07C9 /* Assets.xcassets */,
 				96E6D5E62421148C00BB07C9 /* LaunchScreen.storyboard */,
 				96E6D5E92421148C00BB07C9 /* Info.plist */,
 				96E6D5E32421148C00BB07C9 /* Preview Content */,
-				96E6D5F82422F25E00BB07C9 /* PhotoViewer.swift */,
 			);
 			path = SimplePhotoViewer;
 			sourceTree = "<group>";
@@ -83,16 +76,6 @@
 				96E6D5E42421148C00BB07C9 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		96E6D5F72421151200BB07C9 /* ImageView */ = {
-			isa = PBXGroup;
-			children = (
-				96E6D5F02421150300BB07C9 /* InteractiveImageView.swift */,
-				96E6D5F22421150300BB07C9 /* ImageViewAnimator.swift */,
-				96E6D5EF2421150300BB07C9 /* ImageView.swift */,
-			);
-			path = ImageView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,11 +149,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96E6D5F32421150300BB07C9 /* ImageView.swift in Sources */,
 				96E6D5F52421150300BB07C9 /* ContentView.swift in Sources */,
-				96E6D5F42421150300BB07C9 /* InteractiveImageView.swift in Sources */,
 				96E6D5F92422F25E00BB07C9 /* PhotoViewer.swift in Sources */,
-				96E6D5F62421150300BB07C9 /* ImageViewAnimator.swift in Sources */,
 				96E6D5DC2421148A00BB07C9 /* AppDelegate.swift in Sources */,
 				96E6D5DE2421148A00BB07C9 /* SceneDelegate.swift in Sources */,
 			);

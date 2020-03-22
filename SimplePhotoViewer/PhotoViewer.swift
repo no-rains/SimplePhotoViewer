@@ -61,10 +61,6 @@ fileprivate struct ImageWrapper: View {
 
         minScale = fitRatio
         maxScale = min(maxImgSize.width / minImgSize.width, maxImgSize.height / minImgSize.height) * minScale
-
-        print("image size:\(image.cgImage!.width),\(image.cgImage!.height)")
-        print("screen:\(frame)")
-        print("minImgPoint:\(minImgDisplayPoint)")
     }
 
     @State private var lastTranslation: CGSize?
@@ -182,12 +178,8 @@ fileprivate struct ImageWrapper: View {
             .exclusively(before: rotateAndZoom)
 
         return Image(uiImage: image)
-            // .resizable()
             .renderingMode(.original)
-            // .aspectRatio(contentMode: .fit)
             .gesture(fitToFill)
-            // .scaleEffect(isScaled ? magScale : max(1 - abs(self.dragOffset.height) * 0.004, 0.6), anchor: .center)
-            // .offset(x: dragOffset.width * magScale, y: dragOffset.height * magScale)
             .scaleEffect(minScale * scaleRatio, anchor: .center)
             .offset(x: actualOffset.x, y: actualOffset.y)
             .animation(.spring(response: 0.4, dampingFraction: 0.9))
