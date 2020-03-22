@@ -115,22 +115,26 @@ fileprivate struct ImageWrapper: View {
                 self.dragOffset = value.translation
 
                 if let lastTranslation = self.lastTranslation {
+                    self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio
+                    self.actualOffset.y += (value.translation.height - lastTranslation.height) * self.scaleRatio
                 }
-
+                
                 self.lastTranslation = value.translation
+
+                //print("translation:\(value.translation)")
+                //print("actualOffset:\(self.actualOffset)")
+
+                
             }
             .onEnded { value in
-                if self.isScaled {
-                    self.dragOffset = value.translation
+                self.dragOffset = value.translation
 
-                    if let lastTranslation = self.lastTranslation {
-                    }
-
-                    self.lastTranslation = nil
-
-                } else {
-                    self.dragOffset = CGSize.zero
+                if let lastTranslation = self.lastTranslation {
+                    self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio
+                    self.actualOffset.y += (value.translation.height - lastTranslation.height) * self.scaleRatio
                 }
+
+                self.lastTranslation = nil
             }
 
         let fitToFill = TapGesture(count: 2)
@@ -140,6 +144,7 @@ fileprivate struct ImageWrapper: View {
                 } else {
                     self.scaleRatio = self.maxScale / self.minScale
                 }
+                self.actualOffset = .zero
             }
             .exclusively(before: dragOrDismiss)
             .exclusively(before: rotateAndZoom)
