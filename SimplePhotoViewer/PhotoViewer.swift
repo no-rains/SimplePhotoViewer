@@ -20,13 +20,16 @@ struct PhotoViewer: View {
 
 fileprivate struct ImageWrapper: View {
     // The actual scale base on the minSize
-    @State var actualScale: CGFloat = 1.0
+    @State private var actualScale: CGFloat = 1.0
 
     // The actual offset base on the minPosition
-    @State var actualOffset: CGPoint = .zero
+    @State private var actualOffset: CGPoint = .zero
 
     // Base on the minScale, the min value is 1
-    @State var scaleRatio: CGFloat = 1
+    @State private var scaleRatio: CGFloat = 1
+
+    @State private var lastTranslation: CGSize?
+    @State private var lastScale: CGFloat?
 
     // The image
     private let image: UIImage
@@ -63,17 +66,6 @@ fileprivate struct ImageWrapper: View {
         maxScale = min(maxImgSize.width / minImgSize.width, maxImgSize.height / minImgSize.height) * minScale
     }
 
-    @State private var lastTranslation: CGSize?
-    @State private var lastScale: CGFloat?
-
-    // Magnify and Rotate States
-    @State private var magScale: CGFloat = 1
-    // @State private var rotAngle: Angle = .zero
-    @State private var isScaled: Bool = false
-
-    // Drag Gesture Binding
-    @State private var dragOffset: CGSize = .zero
-
     private func fixOffset() {
         if frame.width > minImgSize.width * scaleRatio {
             actualOffset.x = 0
@@ -107,8 +99,6 @@ fileprivate struct ImageWrapper: View {
     var body: some View {
         let rotateAndZoom = MagnificationGesture()
             .onChanged { scale in
-                self.magScale = scale
-                self.isScaled = true
 
                 if let lastScale = self.lastScale {
                     // The zoom gesture is base on the center, so is a half
@@ -119,8 +109,6 @@ fileprivate struct ImageWrapper: View {
                 self.lastScale = scale
             }
             .onEnded { scale in
-                scale > 1 ? (self.magScale = scale) : (self.magScale = 1)
-                self.isScaled = scale > 1
 
                 if let lastScale = self.lastScale {
                     let ratio = 1.0 + (scale - lastScale)
@@ -132,7 +120,7 @@ fileprivate struct ImageWrapper: View {
                         self.scaleRatio = self.maxScale / self.minScale
                     }
                 }
-                
+
                 self.fixOffset()
 
                 self.lastScale = nil
@@ -140,7 +128,6 @@ fileprivate struct ImageWrapper: View {
 
         let dragOrDismiss = DragGesture()
             .onChanged { value in
-                self.dragOffset = value.translation
 
                 if let lastTranslation = self.lastTranslation {
                     self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio
@@ -153,7 +140,6 @@ fileprivate struct ImageWrapper: View {
                 // print("actualOffset:\(self.actualOffset)")
             }
             .onEnded { value in
-                self.dragOffset = value.translation
 
                 if let lastTranslation = self.lastTranslation {
                     self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio
