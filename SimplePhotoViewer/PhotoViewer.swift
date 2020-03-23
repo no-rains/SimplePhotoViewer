@@ -135,9 +135,6 @@ fileprivate struct ImageWrapper: View {
                 }
 
                 self.lastTranslation = value.translation
-
-                // print("translation:\(value.translation)")
-                // print("actualOffset:\(self.actualOffset)")
             }
             .onEnded { value in
 
