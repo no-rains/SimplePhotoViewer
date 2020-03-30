@@ -47,19 +47,18 @@ fileprivate struct ImageWrapper: View {
     init(name: String, frame: CGRect) {
         self.name = name
         self.frame = frame
-        
-        let uiImage = UIImage(named:name)!
-        let originImgWidth = uiImage.cgImage!.width
-        let originImgHeight = uiImage.cgImage!.height
-        
 
-        var fitRatio: CGFloat = min(frame.width / CGFloat(originImgWidth), frame.height / CGFloat(originImgHeight))
+        // TODO: Find another way to get the image width and height
+        let uiImage = UIImage(named: name)!
+        let imageSize = uiImage.size
+
+        var fitRatio: CGFloat = min(frame.width / CGFloat(imageSize.width), frame.height / CGFloat(imageSize.height))
         if fitRatio > 1 {
             fitRatio = 1
         }
 
-        maxImgSize = CGSize(width: CGFloat(originImgWidth),
-                            height: CGFloat(originImgHeight))
+        maxImgSize = CGSize(width: CGFloat(imageSize.width),
+                            height: CGFloat(imageSize.height))
 
         minImgSize = CGSize(width: maxImgSize.width * fitRatio,
                             height: maxImgSize.height * fitRatio)
@@ -166,11 +165,12 @@ fileprivate struct ImageWrapper: View {
             .exclusively(before: rotateAndZoom)
 
         return Image(name)
-            //.renderingMode(.original)
+            // .renderingMode(.original)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .gesture(fitToFill)
-            .scaleEffect(minScale * scaleRatio, anchor: .center)
+            //.scaleEffect(minScale * scaleRatio, anchor: .center)
+            .scaleEffect(scaleRatio, anchor: .center)
             .offset(x: actualOffset.x, y: actualOffset.y)
             .animation(.spring(response: 0.4, dampingFraction: 0.9))
     }
