@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct PhotoViewer: View {
-    var image: UIImage
+    var name: String
     var body: some View {
         return GeometryReader { geometryProxy in
-            ImageWrapper(image: self.image,
+            ImageWrapper(name: self.name,
                          frame: CGRect(x: geometryProxy.safeAreaInsets.leading, y: geometryProxy.safeAreaInsets.trailing, width: geometryProxy.size.width, height: geometryProxy.size.height))
         }
     }
@@ -32,7 +32,7 @@ fileprivate struct ImageWrapper: View {
     @State private var lastScale: CGFloat?
 
     // The image
-    private let image: UIImage
+    private let name: String
 
     // The frame for the image view
     private let frame: CGRect
@@ -44,17 +44,22 @@ fileprivate struct ImageWrapper: View {
     private let minScale: CGFloat
     private let maxScale: CGFloat
 
-    init(image: UIImage, frame: CGRect) {
-        self.image = image
+    init(name: String, frame: CGRect) {
+        self.name = name
         self.frame = frame
+        
+        let uiImage = UIImage(named:name)!
+        let originImgWidth = uiImage.cgImage!.width
+        let originImgHeight = uiImage.cgImage!.height
+        
 
-        var fitRatio: CGFloat = min(frame.width / CGFloat(image.cgImage!.width), frame.height / CGFloat(image.cgImage!.height))
+        var fitRatio: CGFloat = min(frame.width / CGFloat(originImgWidth), frame.height / CGFloat(originImgHeight))
         if fitRatio > 1 {
             fitRatio = 1
         }
 
-        maxImgSize = CGSize(width: CGFloat(image.cgImage!.width),
-                            height: CGFloat(image.cgImage!.height))
+        maxImgSize = CGSize(width: CGFloat(originImgWidth),
+                            height: CGFloat(originImgHeight))
 
         minImgSize = CGSize(width: maxImgSize.width * fitRatio,
                             height: maxImgSize.height * fitRatio)
@@ -160,8 +165,10 @@ fileprivate struct ImageWrapper: View {
             .exclusively(before: dragOrDismiss)
             .exclusively(before: rotateAndZoom)
 
-        return Image(uiImage: image)
-            .renderingMode(.original)
+        return Image(name)
+            //.renderingMode(.original)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
             .gesture(fitToFill)
             .scaleEffect(minScale * scaleRatio, anchor: .center)
             .offset(x: actualOffset.x, y: actualOffset.y)

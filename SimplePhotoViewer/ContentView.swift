@@ -11,7 +11,14 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         return ZStack(alignment: .topLeading) {
-            PhotoViewer(image: UIImage(named: "photo")!)
+            //PhotoViewer(name: "photo2")
+            PhotoViewer3(name: "photo2")
+            
+            /*
+            return Image(uiImage: UIImage(named: "photo2")!)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+             */
         }
     }
 }
