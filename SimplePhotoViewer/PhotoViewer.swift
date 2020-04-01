@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct PhotoViewer: View {
-    var name: String
+    var image: UIImage
     var body: some View {
         return GeometryReader { geometryProxy in
-            ImageWrapper(name: self.name,
+            ImageWrapper(image: self.image,
                          frame: CGRect(x: geometryProxy.safeAreaInsets.leading, y: geometryProxy.safeAreaInsets.trailing, width: geometryProxy.size.width, height: geometryProxy.size.height))
         }
     }
@@ -32,7 +32,7 @@ fileprivate struct ImageWrapper: View {
     @State private var lastScale: CGFloat?
 
     // The image
-    private let name: String
+    private let image: UIImage
 
     // The frame for the image view
     private let frame: CGRect
@@ -44,13 +44,11 @@ fileprivate struct ImageWrapper: View {
     private let minScale: CGFloat
     private let maxScale: CGFloat
 
-    init(name: String, frame: CGRect) {
-        self.name = name
+    init(image: UIImage, frame: CGRect) {
+        self.image = ImageWrapper.normalizedImage(image)
         self.frame = frame
 
-        // TODO: Find another way to get the image width and height
-        let uiImage = UIImage(named: name)!
-        let imageSize = uiImage.size
+        let imageSize = image.size
 
         var fitRatio: CGFloat = min(frame.width / CGFloat(imageSize.width), frame.height / CGFloat(imageSize.height))
         if fitRatio > 1 {
@@ -68,6 +66,25 @@ fileprivate struct ImageWrapper: View {
 
         minScale = fitRatio
         maxScale = min(maxImgSize.width / minImgSize.width, maxImgSize.height / minImgSize.height) * minScale
+    }
+
+    /**
+     Normalized Image base on the orientation
+     
+     - Parameter image: The image for normalizing
+
+     - Returns: The normalized image
+     **/
+    private static func normalizedImage(_ image: UIImage) -> UIImage {
+        if image.imageOrientation == UIImage.Orientation.up {
+            return image
+        }
+
+        UIGraphicsBeginImageContextWithOptions(image.size, false, 1)
+        image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
+        let normalizedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return normalizedImage
     }
 
     private func fixOffset() {
@@ -164,12 +181,12 @@ fileprivate struct ImageWrapper: View {
             .exclusively(before: dragOrDismiss)
             .exclusively(before: rotateAndZoom)
 
-        return Image(name)
+        return Image(uiImage: image)
             // .renderingMode(.original)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .gesture(fitToFill)
-            //.scaleEffect(minScale * scaleRatio, anchor: .center)
+            // .scaleEffect(minScale * scaleRatio, anchor: .center)
             .scaleEffect(scaleRatio, anchor: .center)
             .offset(x: actualOffset.x, y: actualOffset.y)
             .animation(.spring(response: 0.4, dampingFraction: 0.9))

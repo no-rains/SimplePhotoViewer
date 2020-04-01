@@ -11,7 +11,10 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         return ZStack(alignment: .topLeading) {
-            PhotoViewer(name: "photo2")
+            //PhotoViewer(name: "photo2")
+            PhotoViewer(image: UIImage(named: "photo2")!)
+                
+            
         }
     }
 }
