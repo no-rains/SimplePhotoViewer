@@ -151,17 +151,21 @@ fileprivate struct ImageWrapper: View {
             .onChanged { value in
 
                 if let lastTranslation = self.lastTranslation {
-                    self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio
-                    self.actualOffset.y += (value.translation.height - lastTranslation.height) * self.scaleRatio
+                    //When being scaling, the size is rising to leading and trailing, so double the value
+                    self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio * 2
+                    self.actualOffset.y += (value.translation.height - lastTranslation.height) * self.scaleRatio * 2
                 }
+                
+                print(self.scaleRatio)
+                print(self.actualOffset)
 
                 self.lastTranslation = value.translation
             }
             .onEnded { value in
 
                 if let lastTranslation = self.lastTranslation {
-                    self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio
-                    self.actualOffset.y += (value.translation.height - lastTranslation.height) * self.scaleRatio
+                    self.actualOffset.x += (value.translation.width - lastTranslation.width) * self.scaleRatio * 2
+                    self.actualOffset.y += (value.translation.height - lastTranslation.height) * self.scaleRatio * 2
                 }
 
                 self.fixOffset()
